@@ -1,0 +1,48 @@
+name: "Build"
+on:
+  workflow_dispatch:
+  pull_request:
+  release:
+    types:
+      - published
+
+# Cancel any ongoing previous run if the job is re-triggered
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  GODOT_VERSION: 3.6
+
+jobs:
+  linux:
+    name: Linux/X11
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/smks/godot-ci:3.6
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up export templates
+        run: |
+          mkdir -v -p ~/.local/share/godot/templates/
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+
+      - name: Build
+        run: |
+          mkdir --verbose --parents ./export/linux
+          godot --no-window --path=./project.godot --export "Linux/X11" ./export/linux/ROTA.x86_64
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: Linux
+          path: export/linux
