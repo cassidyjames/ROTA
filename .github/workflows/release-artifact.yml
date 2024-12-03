@@ -42,7 +42,6 @@ jobs:
             export/linux/ROTA.pck
 
       - name: Upload release artifact
-        uses:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
