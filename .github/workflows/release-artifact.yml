@@ -8,8 +8,8 @@ env:
   GODOT_VERSION: 3.6
 
 jobs:
-  linux:
-    name: Linux/X11
+  build:
+    name: Build
     runs-on: ubuntu-latest
     container:
       image: docker.io/smks/godot-ci:3.6
@@ -24,11 +24,15 @@ jobs:
           mkdir -v -p ~/.local/share/godot/templates/
           mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
 
-      - name: Build
+      - name: Export with Godot
         run: |
           mkdir --verbose --parents ./export/linux
           godot --no-window --path=./project.godot --export "Linux/X11" ./export/linux/ROTA.x86_64
 
+  upload:
+    name: Upload
+    runs-on: ubuntu-latest
+    steps:
       - name: Upload run artifact
         uses: actions/upload-artifact@v4
         with:
@@ -38,6 +42,7 @@ jobs:
             export/linux/ROTA.pck
 
       - name: Upload release artifact
+        uses:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
