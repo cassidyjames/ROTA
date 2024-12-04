@@ -4,7 +4,7 @@ on:
   pull_request:
   release:
     types:
-      - published
+      - released
 
 env:
   GODOT_VERSION: 3.6
@@ -42,6 +42,7 @@ jobs:
   release:
     name: Release
     needs: build
+    if: ${{ github.event_name == 'release' }}
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
