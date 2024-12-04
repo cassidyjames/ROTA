@@ -1,0 +1,16 @@
+{
+  "name": "godot-tools",
+  "buildsystem": "simple",
+  "sources": [
+    {
+      "type": "archive",
+      "sha256": "5bed20a7056d4cc3cca34001752109809ad7ae200548e98c7bbc6afbad18eda7",
+      "url": "https://github.com/godotengine/godot/releases/download/3.6-stable/godot-3.6-stable.tar.xz"
+    }
+  ],
+  "build-commands": [
+    "python3 /app/bin/scons $SCONS_FLAGS $SCONS_FLAGS_EXTRA platform=server tools=yes target=release_debug -j \"$FLATPAK_BUILDER_N_JOBS\"",
+    "ls -a",
+    "install -D -m755 bin/godot_server.x11.opt.tools.* /app/bin/godot-bin"
+  ]
+}

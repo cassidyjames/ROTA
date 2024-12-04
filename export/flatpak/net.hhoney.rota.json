@@ -1,0 +1,65 @@
+{
+  "id": "net.hhoney.rota",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "24.08",
+  "base": "org.godotengine.godot.BaseApp",
+  "base-version": "3.6",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "godot-runner",
+  "build-options": {
+    "arch": {
+      "x86_64": {
+        "env": {
+          "SCONS_FLAGS_EXTRA": "lto=full"
+        }
+      },
+      "aarch64": {
+        "env": {
+          "SCONS_FLAGS_EXTRA": "arch=arm64"
+        }
+      }
+    },
+    "env": {
+      "SCONS_FLAGS": "platform=x11 CCFLAGS=-I/app/include prefix=/app unix_global_settings_path=/app progress=no builtin_freetype=no builtin_libogg=no builtin_libpng=no builtin_libtheora=no builtin_libvorbis=no builtin_libwebp=no builtin_openssl=no builtin_libvpx=no builtin_zlib=no udev=no\n"
+    }
+  },
+  "finish-args": [
+    "--share=ipc",
+    "--socket=x11",
+    "--socket=pulseaudio",
+    "--device=dri"
+  ],
+  "modules": [
+    "modules/glu.json",
+    "modules/scons.json",
+    "modules/godot-tools.json",
+    {
+      "name": "rota",
+      "buildsystem": "simple",
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/godotengine/godot/releases/download/3.6-stable/Godot_v3.6-stable_export_templates.tpz",
+          "sha512": "2affd3feadd68a2d734b80dd3e6521d5edf9d931bfec4a374d65ffb859731bc25500190dc5b32ba98153f146f0488845736aa04ec9bc872e059a9960e9b3b8e8",
+          "archive-type": "zip",
+          "strip-components": 0
+        },
+        {
+          "type": "dir",
+          "path": "../.."
+        }
+      ],
+      "build-commands": [
+        "ls -a",
+        "touch ._sc_",
+        "mkdir -p ./editor_data/templates",
+        "mv templates editor_data/templates/3.6.stable",
+        "godot-bin --no-window --path=./project.godot --export-pack 'Linux/X11' ./godot-runner.pck",
+        "install -Dm644 godot-runner.pck ${FLATPAK_DEST}/bin/godot-runner.pck",
+        "install -Dm644 export/flatpak/launcher.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop",
+        "install -Dm644 export/flatpak/metainfo.xml ${FLATPAK_DEST}/share/metainfo/${FLATPAK_ID}.metainfo.xml",
+        "install -Dm644 media/image/icon/icon256.png ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/${FLATPAK_ID}.png"
+      ]
+    }
+  ]
+}
