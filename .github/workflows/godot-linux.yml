@@ -1,4 +1,4 @@
-name: "Build & Release Artifact"
+name: "Godot Linux"
 on:
   workflow_dispatch:
   pull_request:
@@ -8,13 +8,14 @@ on:
 
 env:
   GODOT_VERSION: 3.6
+  EXPORT_NAME: rota-linux
 
 jobs:
-  build:
-    name: Build
+  export:
+    name: Export
     runs-on: ubuntu-latest
     container:
-      image: docker.io/smks/godot-ci:3.6
+      image: docker.io/smks/godot-ci:${{ env.GODOT_VERSION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,37 +27,35 @@ jobs:
           mkdir -v -p ~/.local/share/godot/templates/
           mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
 
-      - name: Export with Godot
+      - name: Export
         run: |
           mkdir --verbose --parents ./export/linux
-          godot --no-window --path=./project.godot --export "Linux/X11" ./export/linux/ROTA.x86_64
+          godot --no-window --path=./project.godot --export "Linux/X11" ./export/linux/${EXPORT_NAME}.x86_64
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rota-linux
+          name: ${{ env.EXPORT_NAME }}
           path: |
-            export/linux/ROTA.x86_64
-            export/linux/ROTA.pck
+            export/linux/${EXPORT_NAME}.x86_64
+            export/linux/${EXPORT_NAME}.pck
 
   release:
     name: Release
-    needs: build
+    needs: export
     if: ${{ github.event_name == 'release' }}
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: rota-linux
+          name: ${{ env.EXPORT_NAME }}
 
-      - name: Display structure of downloaded files
+      - name: Display downloaded files
         run: ls -R
 
       - name: Upload to release
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
-          gh release upload
-          '${{ github.ref_name }}' *
-          --repo '${{ github.repository }}'
+          gh release upload '${{ github.ref_name }}' * --repo '${{ github.repository }}'
