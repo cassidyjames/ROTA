@@ -37,8 +37,8 @@ jobs:
         with:
           name: ${{ env.EXPORT_NAME }}
           path: |
-            export/linux/${EXPORT_NAME}.x86_64
-            export/linux/${EXPORT_NAME}.pck
+            export/linux/${{ env.EXPORT_NAME }}.x86_64
+            export/linux/${{ env.EXPORT_NAME }}.pck
 
   release:
     name: Release
