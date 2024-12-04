@@ -57,5 +57,5 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
           gh release upload
-          '${{ github.ref_name }}' export/linux/ROTA*
+          '${{ github.ref_name }}' *
           --repo '${{ github.repository }}'
