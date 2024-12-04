@@ -1,5 +1,7 @@
-name: "Release Artifact"
+name: "Build & Release Artifact"
 on:
+  workflow_dispatch:
+  pull_request:
   release:
     types:
       - published
@@ -42,8 +44,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Upload
+      - name: Download artifact
         uses: actions/download-artifact@v4
+        with:
+          name: rota-linux
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Upload to release
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
