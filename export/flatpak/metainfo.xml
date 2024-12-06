@@ -68,7 +68,7 @@
     </release>
     <release version="1.9" date="2024-09-09T23:08:11Z">
       <description>
-        <p>Patch 9 - Android Port & Touch Controls !</p>
+        <p>Patch 9 - Android Port &amp; Touch Controls !</p>
         <ul>
           <li>ROTA on Android</li>
           <li>Touch Controls for any device</li>
@@ -78,7 +78,7 @@
     </release>
     <release version="1.8" date="2024-09-09T23:08:11Z">
       <description>
-        <p>Patch 8 - New Logo & Engine Upgrade</p>
+        <p>Patch 8 - New Logo &amp; Engine Upgrade</p>
         <ul>
           <li>Game Engine update from Godot 3.5.2 to Godot 3.6</li>
           <li>New Logo !</li>
@@ -87,7 +87,7 @@
     </release>
     <release version="1.7" date="2023-05-27T05:42:05Z">
       <description>
-        <p>Patch 7 - Arcade Action & Ultrawide Support</p>
+        <p>Patch 7 - Arcade Action &amp; Ultrawide Support</p>
         <ul>
           <li>"Wrap It Up" Arcade Cabinet located in the Grasslands (:</li>
           <li>Ultrawide Display Support! ROTA now expands to infinite width...</li>
@@ -129,8 +129,8 @@
           <li>Connect stray worlds and bring people together!</li>
         </ul>
         <ul>
-          <li>Dynamic Weather System! Clouds fill the sky with falling Rain & Snow...</li>
-          <li>Day & Night! Watch the Sun rise and Moon fall.</li>
+          <li>Dynamic Weather System! Clouds fill the sky with falling Rain &amp; Snow...</li>
+          <li>Day &amp; Night! Watch the Sun rise and Moon fall.</li>
           <li>Dynamic Lighting and Shadows! Illuminated by the Burning Star in Orbit.</li>
           <li>Stars come out at night! Twinkling in the distance...</li>
           <li>Background depth with Parallax layers!</li>
@@ -141,14 +141,14 @@
           <li>World Door Unlock Cutscene! Combine the power of Gems and fill the socket...</li>
         </ul>
         <ul>
-          <li>All Menus overhauled! Simple & Clean.</li>
+          <li>All Menus overhauled! Simple &amp; Clean.</li>
           <li>Pause Menu minified. The world keeps moving...</li>
           <li>UI animation improved when collecting a Gem or Clock!</li>
           <li>Hair physics rework! Smoother motions when swaying in the breeze (;</li>
           <li>Radial Blur effect with help from Guy Unger! <3</li>
         </ul>
         <ul>
-          <li>Player D-Pad & Joystick input issues fixed! Movement feels more responsive.</li>
+          <li>Player D-Pad &amp; Joystick input issues fixed! Movement feels more responsive.</li>
           <li>Camera speed V-Sync issue fixed!</li>
           <li>Performance improvements! Ignoring many objects off-screen.</li>
         </ul>
