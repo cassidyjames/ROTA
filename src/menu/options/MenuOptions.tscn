@@ -256,6 +256,7 @@ script = ExtResource( 24 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+list = PoolStringArray( "TOGGLE", "ALWAYS" )
 is_refill = true
 var_name = "is_touch"
 
