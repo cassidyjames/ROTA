@@ -537,7 +537,7 @@ func _physics_process(delta):
 				else:
 					# spin
 					if !has_jumped:
-						walk_around(test_move(transform, rot(Vector2(-25, 25))))
+						walk_around(velocity.x > 0)
 						has_jumped = true
 						is_floor = false
 		
