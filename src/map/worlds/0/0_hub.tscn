@@ -24,7 +24,6 @@
 
 [node name="SolidTileMap4" parent="." instance=ExtResource( 5 )]
 detail = 4
-bg_palette = 1
 
 [node name="SolidTileMap0" parent="." instance=ExtResource( 5 )]
 tile_data = PoolIntArray( 917532, 1610612736, 0, 917533, 1610612736, 0, 917534, 1610612736, 0, 917535, 1610612736, 0, 917536, 1610612736, 0, 983068, 1610612736, 0, 983069, 1610612736, 0, 983070, 1610612736, 0, 983071, 1610612736, 0, 983072, 1610612736, 0 )

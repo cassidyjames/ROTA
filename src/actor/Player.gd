@@ -41,6 +41,7 @@ var joy_buffer := 0.1
 var hold_x := 0.0
 var hold_y := 0.0
 var btn_jump := false
+var btn_jump_last := false
 var btnp_jump := false
 var hold_jump := 0.0
 var jump_buffer := 0.3
@@ -149,12 +150,19 @@ var queue := []
 var snowball_scene : PackedScene = preload("res://src/actor/Snowball.tscn")
 var snowballs = []
 
+export var is_replay := false
+var metadata = {} setget set_metadata
+var replay_frame = 0
+
 func _enter_tree():
 	if Engine.editor_hint: return
 	if get_parent() == Shared:
 		Shared.player = self
+	elif is_replay:
+		Shared.replayers.append(self)
 	get_tree().connect("physics_frame", self, "physics_frame")
 	MenuPause.connect("opened", self, "pause")
+	Shared.connect("scene_before", self, "scene_before")
 	Shared.connect("scene_changed", self, "scene")
 	Wipe.connect("start", self, "wipe_start")
 	Cutscene.connect("playing", self, "cutscene_playing")
@@ -201,7 +209,8 @@ func _ready():
 			coy = min(coy, -160)
 		
 		self.chat_offset.y = coy
-	else:
+	
+	if !is_npc or is_replay:
 		if arrow:
 			arrow.is_locked = true
 			arrow.monitoring = false
@@ -213,6 +222,12 @@ func wipe_start(arg):
 		spr_easy.show = arg
 		if arg: spr_easy.clock = 0.0
 
+func scene_before():
+	if is_replay:
+		metadata = {}
+		replay_frame = 0
+		clear_input()
+
 func scene():
 	door_exit = Shared.door_in if is_instance_valid(Shared.door_in) else null
 	
@@ -220,11 +235,20 @@ func scene():
 	if is_npc:
 		global_position = start_pos
 		self.dir = start_dir
-		
+	# start replay
+	elif is_replay:
+		if metadata.has_all(["pos", "dir"]):
+			var p = metadata["pos"]
+			global_position = Vector2(p[0], p[1])
+			self.dir = metadata["dir"]
+			visible = true
+		else:
+			visible = false
 	# go to last door
 	elif door_exit:
 		global_position = door_exit.global_position
 		self.dir = door_exit.dir
+	
 	
 	#print(name, " pos: ", global_position, " dir: ", dir)
 	
@@ -256,6 +280,11 @@ func scene():
 	else:
 		anim.play("jump")
 	
+	if self == Shared.player:
+		Scores.data["pos"] = [global_position.x, global_position.y]
+		Scores.data["dir"] = dir
+		Scores.data["style"] = [hairstyle_back, hairstyle_front, dye["eye"], dye["fit"], dye["hair"], dye["skin"]]
+
 
 func _physics_process(delta):
 	if Engine.editor_hint: return
@@ -281,8 +310,24 @@ func _physics_process(delta):
 				is_unpause = false
 		
 		if !is_unpause:
+			btn_jump_last = btn_jump
 			btn_jump = Input.is_action_pressed("jump") and release_clock == 0
 			btn_push = Input.is_action_pressed("grab")
+		
+		if joy.x != joy_last.x or btn_jump != btn_jump_last:
+			Scores.data[Shared.map_frame] = [joy.x, int(btn_jump)]
+	
+	if is_replay and metadata.has_all(["pos", "dir"]):
+		#print(replay_frame)
+		if metadata.has(str(replay_frame)):
+			print(replay_frame, " oh yeah")
+			var m = metadata[str(replay_frame)]
+			joy.x = m[0]
+			btn_jump = bool(m[1])
+		
+		replay_frame += 1
+	
+	
 	
 	# holding input
 	hold_x = (hold_x + delta) if joy.x == joy_last.x and joy.x != 0 else 0.0
@@ -780,7 +825,7 @@ func _on_BodyArea_body_entered(body):
 
 func die():
 	if is_dead: return
-	if is_npc:
+	if is_npc or is_replay:
 		scene()
 		return
 	
@@ -890,6 +935,7 @@ func pause(arg := false):
 
 func clear_input():
 	btn_jump = false
+	btn_jump_last = false
 	btnp_jump = false
 	btn_push = false
 	btnp_push = false
@@ -924,3 +970,15 @@ func arrow_open():
 	Shared.chat.open(lines[line], arrow, Transform2D(dir * PI * 0.5, global_position + rot(chat_offset)))
 	greeting_clock = rand_range(greeting_wait.x, greeting_wait.y)
 
+func set_metadata(arg := metadata):
+	metadata = arg
+	if metadata.has_all(["style", "pos", "dir"]):
+		set_physics_process(true)
+		spr_easy.show = true
+		
+		var s = metadata["style"]
+		set_hair_back(s[0])
+		set_hair_front(s[1])
+		set_dye({"eye": s[2],"fit" : s[3],"hair" : s[4], "skin" : s[5]})
+		
+		scene()

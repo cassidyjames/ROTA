@@ -106,6 +106,7 @@ var save_dict := {0: {}, 1: {}, 2: {}}
 signal slot_erased(arg)
 var save_time := 0.0
 var map_clock := 0.0
+var map_frame := 0
 var auto_save_clock := 0.0
 var auto_save_time := 60.0
 
@@ -139,6 +140,8 @@ onready var chat := $ArrowLayer/Chat
 
 var margin_x = 20 setget set_margin_x
 var margin_y = 20 setget set_margin_y
+
+var replayers = []
 
 func _ready():
 	Wipe.connect("complete", self, "wipe_complete")
@@ -230,6 +233,7 @@ func _process(delta):
 	save_time += delta
 	if !get_tree().paused and !Wipe.is_wipe and !Cutscene.is_playing and player.spr_easy.is_complete:
 		map_clock += delta
+		map_frame += 1
 	
 	# clock label
 	UI.clock_file.text = time_string(save_time, clock_decimals)
@@ -298,6 +302,7 @@ func change_scene():
 	save_data()
 	try_achievement()
 	map_clock = 0.0
+	map_frame = 0
 	
 	yield(get_tree(), "idle_frame")
 	
