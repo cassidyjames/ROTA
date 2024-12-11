@@ -19,7 +19,11 @@ onready var audio_hit := get_node_or_null(audio_path)
 export var pitch_from := 0.7
 export var pitch_to := 1.3
 
+var max_delta = 0.2
+
 func _process(delta):
+	delta = clamp(delta, 0, max_delta)
+	
 	velocity = lerp(velocity, (target - angle) * 0.5, delta * weight)
 	angle += velocity * 60.0 * delta
 	
