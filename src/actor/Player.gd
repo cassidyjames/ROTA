@@ -154,6 +154,9 @@ export var is_replay := false
 var metadata = {} setget set_metadata
 var replay_frame = 0
 
+var replay_delay = 0.0
+export var delay_range := Vector2(0.3, 5.0)
+
 func _enter_tree():
 	if Engine.editor_hint: return
 	if get_parent() == Shared:
@@ -210,6 +213,10 @@ func _ready():
 		
 		self.chat_offset.y = coy
 	
+	if is_replay:
+		z_index = min(ready_z_index, 43)
+		collision_layer = 0
+	
 	if !is_npc or is_replay:
 		if arrow:
 			arrow.is_locked = true
@@ -229,7 +236,7 @@ func scene_before():
 		clear_input()
 
 func scene():
-	door_exit = Shared.door_in if is_instance_valid(Shared.door_in) else null
+	door_exit = Shared.door_in if is_instance_valid(Shared.door_in) and !is_replay else null
 	
 	# move npc
 	if is_npc:
@@ -237,13 +244,13 @@ func scene():
 		self.dir = start_dir
 	# start replay
 	elif is_replay:
-		if metadata.has_all(["pos", "dir"]):
+		var h = metadata.has_all(["pos", "dir"])
+		visible = h
+		
+		if h:
 			var p = metadata["pos"]
 			global_position = Vector2(p[0], p[1])
 			self.dir = metadata["dir"]
-			visible = true
-		else:
-			visible = false
 	# go to last door
 	elif door_exit:
 		global_position = door_exit.global_position
@@ -319,9 +326,10 @@ func _physics_process(delta):
 	
 	if is_replay and metadata.has_all(["pos", "dir"]):
 		#print(replay_frame)
-		if metadata.has(str(replay_frame)):
-			print(replay_frame, " oh yeah")
-			var m = metadata[str(replay_frame)]
+		var srf = str(replay_frame)
+		if metadata.has(srf):
+			#print(replay_frame, " oh yeah")
+			var m = metadata[srf]
 			joy.x = m[0]
 			btn_jump = bool(m[1])
 		
@@ -580,6 +588,11 @@ func _process(delta):
 		
 		return
 	
+	if replay_delay > 0:
+		replay_delay -= delta
+		if replay_delay <= 0:
+			spr_easy.show = true
+	
 	if spr_easy.is_less or !spr_easy.show:
 		var sec = spr_easy.count(delta, spr_easy.show and !Wipe.is_intro)
 		var dp = to_local(door_exit.global_position) if is_instance_valid(door_exit) else rot(Vector2(0, -25))
@@ -827,6 +840,8 @@ func die():
 	if is_dead: return
 	if is_npc or is_replay:
 		scene()
+		if is_replay:
+			visible = false
 		return
 	
 	is_dead = true
@@ -974,7 +989,6 @@ func set_metadata(arg := metadata):
 	metadata = arg
 	if metadata.has_all(["style", "pos", "dir"]):
 		set_physics_process(true)
-		spr_easy.show = true
 		
 		var s = metadata["style"]
 		set_hair_back(s[0])
@@ -982,3 +996,6 @@ func set_metadata(arg := metadata):
 		set_dye({"eye": s[2],"fit" : s[3],"hair" : s[4], "skin" : s[5]})
 		
 		scene()
+		replay_delay = rand_range(delay_range.x, delay_range.y)
+		spr_easy.show = false
+		spr_easy.clock = 0.0

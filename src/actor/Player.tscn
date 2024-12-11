@@ -914,6 +914,7 @@ hair_fronts = [ "", "res://src/actor/hair/front/OneShort.tscn", "res://src/actor
 hairstyle_back = 5
 hairstyle_front = 1
 hats = [ "", "res://src/actor/hat/Candle.tscn", "res://src/actor/hat/FlowerPetals.tscn", "res://src/actor/hat/Carrot.tscn" ]
+delay_range = Vector2( 0.3, 10 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
