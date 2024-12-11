@@ -156,6 +156,8 @@ var replay_frame = 0
 
 var replay_delay = 0.0
 export var delay_range := Vector2(0.3, 5.0)
+var replay_keys = 0
+var max_keys = 120
 
 func _enter_tree():
 	if Engine.editor_hint: return
@@ -230,10 +232,10 @@ func wipe_start(arg):
 		if arg: spr_easy.clock = 0.0
 
 func scene_before():
-	if is_replay:
-		metadata = {}
-		replay_frame = 0
-		clear_input()
+	replay_keys = 0
+	replay_frame = -1
+	metadata = {}
+	clear_input()
 
 func scene():
 	door_exit = Shared.door_in if is_instance_valid(Shared.door_in) and !is_replay else null
@@ -255,7 +257,6 @@ func scene():
 	elif door_exit:
 		global_position = door_exit.global_position
 		self.dir = door_exit.dir
-	
 	
 	#print(name, " pos: ", global_position, " dir: ", dir)
 	
@@ -321,9 +322,12 @@ func _physics_process(delta):
 			btn_jump = Input.is_action_pressed("jump") and release_clock == 0
 			btn_push = Input.is_action_pressed("grab")
 		
-		if joy.x != joy_last.x or btn_jump != btn_jump_last:
-			Scores.data[Shared.map_frame] = [joy.x, int(btn_jump)]
-			Scores.data["limit"] = Shared.map_frame
+		if replay_keys < max_keys and (joy.x != joy_last.x or btn_jump != btn_jump_last):
+			if replay_frame == -1:
+				replay_frame = 0
+			Scores.data[replay_frame] = [joy.x, int(btn_jump)]
+			Scores.data["limit"] = replay_frame
+			replay_keys += 1
 	
 	if is_replay and metadata.has_all(["pos", "dir"]):
 		#print(replay_frame)
@@ -336,7 +340,8 @@ func _physics_process(delta):
 		if metadata.has("limit") and metadata["limit"] < replay_frame:
 			joy.x = 0
 			btn_jump = false
-		
+	
+	if replay_frame > -1:
 		replay_frame += 1
 	
 	
@@ -960,6 +965,7 @@ func clear_input():
 	btn_push = false
 	btnp_push = false
 	joy = Vector2.ZERO
+	joy_last = joy
 
 func cutscene_playing(arg := false):
 	if arg and Shared.player == self:
@@ -1004,3 +1010,4 @@ func set_metadata(arg := metadata):
 		replay_delay = rand_range(delay_range.x, delay_range.y)
 		spr_easy.show = false
 		spr_easy.clock = 0.0
+		replay_frame = 0
