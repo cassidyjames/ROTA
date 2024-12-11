@@ -179,6 +179,7 @@ func _ready():
 	set_is_weather()
 	set_is_interpolate()
 	set_is_touch()
+	
 
 func _input(event):
 	if event is InputEventKey and event.pressed and !event.is_echo():
