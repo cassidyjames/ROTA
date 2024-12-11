@@ -14,8 +14,6 @@ var dir = []
 var data = {}
 var top_score = 1
 
-var max_players = 10
-
 export var player_scene : PackedScene
 
 func _ready():
@@ -65,7 +63,7 @@ func scene_changed():
 		yield(SilentWolf.Scores.get_high_scores(1000, f), "sw_scores_received")
 		
 		var s = SilentWolf.Scores.scores
-		var z = min(max_players, s.size())
+		var z = min(Shared.max_players, s.size())
 		for i in z:
 			var m = s[i].metadata
 			var t = int(s[i].score)

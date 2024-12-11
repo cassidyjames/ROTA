@@ -142,6 +142,7 @@ var margin_x = 20 setget set_margin_x
 var margin_y = 20 setget set_margin_y
 
 var is_multiplayer := true setget set_is_multiplayer
+var max_players := 10 setget set_max_players
 
 func _ready():
 	Wipe.connect("complete", self, "wipe_complete")
@@ -182,6 +183,8 @@ func _ready():
 	set_is_weather()
 	set_is_interpolate()
 	set_is_touch()
+	set_is_multiplayer()
+	set_max_players()
 	
 
 func _input(event):
@@ -511,6 +514,9 @@ func set_margin_y(arg := margin_y):
 func set_is_multiplayer(arg := is_multiplayer):
 	is_multiplayer = arg
 
+func set_max_players(arg := max_players):
+	max_players = clamp(arg, 0, 10)
+
 ### Exit Game
 
 func quit():
@@ -717,6 +723,7 @@ func save_options():
 	o["clock_decimals"] = int(clock_decimals)
 	o["is_touch"] = int(is_touch)
 	o["is_multiplayer"] = int(is_multiplayer)
+	o["max_players"] = int(max_players)
 	
 	file_save_json("user://options.json", o)
 	
@@ -767,6 +774,8 @@ func load_options():
 		is_touch = bool(d["is_touch"])
 	if d.has("is_multiplayer"):
 		is_multiplayer = bool(d["is_multiplayer"])
+	if d.has("max_players"):
+		max_players = int(d["max_players"])
 
 func save_keys(path := "user://keys.tres"):
 	var s_keys = SaveDict.new()
