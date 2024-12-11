@@ -42,7 +42,7 @@ func make_username():
 
 func scene_before():
 	var f = Shared.map_name
-	if f != "" and Shared.is_multiplayer:
+	if "hub" in f and Shared.is_multiplayer:
 		var style = "-"
 		for i in data["style"]:
 			style += str(i)
@@ -54,7 +54,7 @@ func scene_before():
 
 func scene_changed():
 	var f = Shared.map_name
-	if f != "" and Shared.is_multiplayer:
+	if "hub" in f and Shared.is_multiplayer:
 		yield(SilentWolf.Scores.get_high_scores(1000, f), "sw_scores_received")
 		
 		var s = SilentWolf.Scores.scores
