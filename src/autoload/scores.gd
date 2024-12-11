@@ -35,7 +35,7 @@ func _ready():
 
 func scene_before():
 	var f = Shared.map_name
-	if f != "":
+	if f != "" and Shared.is_multiplayer:
 		SilentWolf.Scores.persist_score(f, top_score + 1, f, data)
 		#SilentWolf.Scores.wipe_leaderboard(f)
 		data = {}
@@ -43,7 +43,7 @@ func scene_before():
 
 func scene_changed():
 	var f = Shared.map_name
-	if f != "":
+	if f != "" and Shared.is_multiplayer:
 		yield(SilentWolf.Scores.get_high_scores(1000, f), "sw_scores_received")
 		
 		var s = SilentWolf.Scores.scores

@@ -142,6 +142,7 @@ var margin_x = 20 setget set_margin_x
 var margin_y = 20 setget set_margin_y
 
 var replayers = []
+var is_multiplayer := true setget set_is_multiplayer
 
 func _ready():
 	Wipe.connect("complete", self, "wipe_complete")
@@ -508,6 +509,9 @@ func set_margin_y(arg := margin_y):
 	margin_y = abs(arg)
 	TouchScreen.margin(margin_x, margin_y)
 
+func set_is_multiplayer(arg := is_multiplayer):
+	is_multiplayer = arg
+
 ### Exit Game
 
 func quit():
@@ -713,6 +717,7 @@ func save_options():
 	o["clock_alpha"] = float(clock_alpha)
 	o["clock_decimals"] = int(clock_decimals)
 	o["is_touch"] = int(is_touch)
+	o["is_multiplayer"] = int(is_multiplayer)
 	
 	file_save_json("user://options.json", o)
 	
@@ -761,6 +766,8 @@ func load_options():
 		clock_decimals = int(d["clock_decimals"])
 	if d.has("is_touch"):
 		is_touch = bool(d["is_touch"])
+	if d.has("is_multiplayer"):
+		is_multiplayer = bool(d["is_multiplayer"])
 
 func save_keys(path := "user://keys.tres"):
 	var s_keys = SaveDict.new()
