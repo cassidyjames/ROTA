@@ -838,10 +838,11 @@ func _on_BodyArea_body_entered(body):
 
 func die():
 	if is_dead: return
-	if is_npc or is_replay:
+	if is_npc:
 		scene()
-		if is_replay:
-			visible = false
+		return
+	if is_replay:
+		spr_easy.show = false
 		return
 	
 	is_dead = true
