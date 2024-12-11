@@ -39,7 +39,7 @@ visible = false
 modulate = Color( 1, 0, 0, 1 )
 rect = Rect2( -100, -100, 200, 200 )
 script = ExtResource( 3 )
-node_path = NodePath("..")
+node_path = NodePath("../Sprites")
 
 [node name="Arrow" parent="." index="1"]
 col_size = Vector2( 100, 100 )

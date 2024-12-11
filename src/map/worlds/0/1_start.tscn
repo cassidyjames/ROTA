@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://src/detail/Bench.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/stage/SolidTileMap.tscn" type="PackedScene" id=2]
@@ -12,6 +12,8 @@
 [ext_resource path="res://src/detail/RockCircle.tscn" type="PackedScene" id=10]
 [ext_resource path="res://src/actor/Player.tscn" type="PackedScene" id=11]
 [ext_resource path="res://src/actor/ChatTree.gd" type="Script" id=12]
+[ext_resource path="res://src/actor/door/DoorLittle.tscn" type="PackedScene" id=13]
+[ext_resource path="res://src/actor/door/SecretDoor.gd" type="Script" id=14]
 
 [node name="Node2D" type="Node2D"]
 
@@ -26,6 +28,18 @@ detail = 4
 [node name="Door" parent="Actors" instance=ExtResource( 8 )]
 position = Vector2( 500, 100 )
 scene_path = "res://src/map/worlds/1/0_hub.tscn"
+
+[node name="Door2" parent="Actors" instance=ExtResource( 13 )]
+position = Vector2( 850, 350 )
+rotation = 1.5708
+dir = 1
+scene_path = "res://src/map/worlds/0/0_hub.tscn"
+
+[node name="SecretDoor" type="Node2D" parent="Actors"]
+position = Vector2( 850, 350 )
+script = ExtResource( 14 )
+door_path = NodePath("../Door2")
+map_to_visit = "2/0_hub"
 
 [node name="Mirror" parent="Actors" instance=ExtResource( 9 )]
 position = Vector2( 500, 702 )

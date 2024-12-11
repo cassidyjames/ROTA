@@ -29,7 +29,7 @@ visible = false
 modulate = Color( 1, 0, 0, 1 )
 rect = Rect2( -40, -45, 80, 100 )
 script = ExtResource( 9 )
-node_path = NodePath("..")
+node_path = NodePath("../Sprites")
 
 [node name="Sprites" type="Node2D" parent="." index="2"]
 

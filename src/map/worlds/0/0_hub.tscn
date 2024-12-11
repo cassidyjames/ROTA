@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://src/detail/Saguaro.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/detail/BarrelCacti.tscn" type="PackedScene" id=2]
@@ -19,6 +19,8 @@
 [ext_resource path="res://src/detail/RockSquare.tscn" type="PackedScene" id=17]
 [ext_resource path="res://src/detail/RockCircle.tscn" type="PackedScene" id=18]
 [ext_resource path="res://src/actor/Player.tscn" type="PackedScene" id=19]
+[ext_resource path="res://src/actor/door/DoorLittle.tscn" type="PackedScene" id=20]
+[ext_resource path="res://src/actor/door/SecretDoor.gd" type="Script" id=21]
 
 [node name="Map" type="Node2D"]
 
@@ -68,6 +70,18 @@ rotation = 4.71239
 dir = 3
 scene_path = "res://src/map/worlds/2A/0_hub.tscn"
 gem_count = 15
+
+[node name="Door2" parent="Actors" instance=ExtResource( 20 )]
+position = Vector2( 2951, 1650 )
+rotation = 3.14159
+dir = 2
+scene_path = "res://src/map/worlds/0/1_start.tscn"
+
+[node name="SecretDoor" type="Node2D" parent="Actors"]
+position = Vector2( 2951, 1650 )
+script = ExtResource( 21 )
+door_path = NodePath("../Door2")
+map_to_visit = "2/0_hub"
 
 [node name="NPC" parent="Actors" instance=ExtResource( 19 )]
 position = Vector2( 3440, 2250 )

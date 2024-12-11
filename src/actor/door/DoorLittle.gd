@@ -23,7 +23,7 @@ func _ready():
 	clock.visible = Shared.goals.has(m) and Shared.goals[m] > 0 and Shared.speedruns.has(m) and Shared.goals[m] < Shared.speedruns[m]
 	gem.visible = !clock.visible
 	
-	if "hub" in scene_path:
+	if "hub" in scene_path or "start" in scene_path:
 		gem.visible = false
 	elif Shared.goals.has(m):
 		gem_color(2)

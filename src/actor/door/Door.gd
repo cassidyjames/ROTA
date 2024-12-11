@@ -18,6 +18,7 @@ func _enter_tree():
 	if Engine.editor_hint: return
 	Shared.doors.append(self)
 	Shared.connect("scene_changed", self, "scene_changed")
+	arrow = get_node("Arrow")
 
 func _exit_tree():
 	if Engine.editor_hint: return
