@@ -141,7 +141,6 @@ onready var chat := $ArrowLayer/Chat
 var margin_x = 20 setget set_margin_x
 var margin_y = 20 setget set_margin_y
 
-var replayers = []
 var is_multiplayer := true setget set_is_multiplayer
 
 func _ready():

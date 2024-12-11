@@ -163,8 +163,6 @@ func _enter_tree():
 	if Engine.editor_hint: return
 	if get_parent() == Shared:
 		Shared.player = self
-	elif is_replay:
-		Shared.replayers.append(self)
 	get_tree().connect("physics_frame", self, "physics_frame")
 	MenuPause.connect("opened", self, "pause")
 	Shared.connect("scene_before", self, "scene_before")

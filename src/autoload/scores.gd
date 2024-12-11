@@ -14,6 +14,10 @@ var dir = []
 var data = {}
 var top_score = 1
 
+var max_players = 10
+
+export var player_scene : PackedScene
+
 func _ready():
 	is_online = api_file is Script
 	if !is_online: return
@@ -50,6 +54,9 @@ func scene_before():
 		SilentWolf.Scores.persist_score(username + style, top_score + 1, f, data)
 		#SilentWolf.Scores.wipe_leaderboard(f)
 		data = {}
+	
+	for i in get_children():
+		i.queue_free()
 
 
 func scene_changed():
@@ -58,13 +65,17 @@ func scene_changed():
 		yield(SilentWolf.Scores.get_high_scores(1000, f), "sw_scores_received")
 		
 		var s = SilentWolf.Scores.scores
-		var z = min(Shared.replayers.size(), s.size())
+		var z = min(max_players, s.size())
 		for i in z:
 			var m = s[i].metadata
 			var t = int(s[i].score)
 			if t > top_score:
 				top_score = t
 			
+			var p = player_scene.instance()
+			add_child(p)
+			p.is_replay = true
+			p.metadata = m
 			
 			#print("Scores: ", m , " score : ", s[i].score)
-			Shared.replayers[i].metadata = m
+			#Shared.replayers[i].metadata = m
