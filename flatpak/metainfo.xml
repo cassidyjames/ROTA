@@ -63,7 +63,12 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="1.10" date="2024-12-06T21:44:45Z">
+    <release version="2024.12.10" date="2024-12-10">
+      <description>
+        <p>touch screen revisions</p>
+      </description>
+    </release>
+    <release version="2024.12.6" date="2024-12-06T21:44:45Z">
       <description>
         <p>New Logos &amp; Touch Screen Saving</p>
         <ul>
