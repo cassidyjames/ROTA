@@ -244,13 +244,10 @@ func scene():
 		self.dir = start_dir
 	# start replay
 	elif is_replay:
-		var h = metadata.has_all(["pos", "dir"])
-		visible = h
-		
-		if h:
+		if metadata.has_all(["pos", "dir"]):
 			var p = metadata["pos"]
 			global_position = Vector2(p[0], p[1])
-			self.dir = metadata["dir"]
+			self.dir = int(metadata["dir"])
 	# go to last door
 	elif door_exit:
 		global_position = door_exit.global_position
@@ -277,6 +274,11 @@ func scene():
 	randomize()
 	self.dir_x = sign(ready_dir_x) if ready_dir_x != 0 else  1 if randf() > 0.5 else -1
 	
+	if self == Shared.player:
+		Scores.data["pos"] = [global_position.x, global_position.y]
+		Scores.data["dir"] = dir
+		Scores.data["style"] = [hairstyle_back, hairstyle_front, dye["eye"], dye["fit"], dye["hair"], dye["skin"]]
+	
 	# snap to floor
 	var v = Vector2.DOWN * 150
 	if test_move(transform, rot(v)):
@@ -285,12 +287,6 @@ func scene():
 		anim.seek(rand_range(0, anim.current_animation_length), true)
 	else:
 		anim.play("jump")
-	
-	if self == Shared.player:
-		Scores.data["pos"] = [global_position.x, global_position.y]
-		Scores.data["dir"] = dir
-		Scores.data["style"] = [hairstyle_back, hairstyle_front, dye["eye"], dye["fit"], dye["hair"], dye["skin"]]
-
 
 func _physics_process(delta):
 	if Engine.editor_hint: return
@@ -599,6 +595,7 @@ func _process(delta):
 		replay_delay -= delta
 		if replay_delay <= 0:
 			spr_easy.show = true
+			visible = true
 	
 	if spr_easy.is_less or !spr_easy.show:
 		var sec = spr_easy.count(delta, spr_easy.show and !Wipe.is_intro)
@@ -997,7 +994,6 @@ func arrow_open():
 func set_metadata(arg := metadata):
 	metadata = arg
 	if metadata.has_all(["style", "pos", "dir"]):
-		set_physics_process(true)
 		
 		var s = metadata["style"]
 		set_hair_back(s[0])
@@ -1009,3 +1005,5 @@ func set_metadata(arg := metadata):
 		spr_easy.show = false
 		spr_easy.clock = 0.0
 		replay_frame = 0
+		visible = false
+		is_floor = true

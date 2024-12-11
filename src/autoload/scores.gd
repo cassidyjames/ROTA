@@ -71,8 +71,8 @@ func scene_changed():
 				top_score = t
 			
 			var p = player_scene.instance()
-			add_child(p)
 			p.is_replay = true
+			add_child(p)
 			p.metadata = m
 			
 			#print("Scores: ", m , " score : ", s[i].score)
