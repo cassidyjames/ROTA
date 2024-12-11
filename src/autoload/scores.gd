@@ -4,6 +4,8 @@ onready var api_file = load("silent_wolf_api_key.gd")
 var api_key := ""
 var is_online := false
 var username = "username"
+var chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789"
+var username_length = 16
 
 
 var x = []
@@ -16,7 +18,8 @@ func _ready():
 	is_online = api_file is Script
 	if !is_online: return
 	
-	print("Leaderboard Shared.username: ", username)
+	make_username()
+	print("Leaderboard username: ", username)
 	
 	api_key = api_file.source_code.strip_edges().replace('"', "")
 	SilentWolf.configure({
@@ -27,16 +30,24 @@ func _ready():
 	
 	
 	yield(get_tree(), "idle_frame")
-	SilentWolf.Scores.persist_score(username, 1, "fart")
+	SilentWolf.Scores.persist_score(username, 1, "main")
 	for i in ["scene_before", "scene_changed"]:
 		Shared.connect(i, self, i)
-	
+
+func make_username():
+	username = ""
+	for i in username_length:
+		username += chars[randi() % (chars.length())]
 
 
 func scene_before():
 	var f = Shared.map_name
 	if f != "" and Shared.is_multiplayer:
-		SilentWolf.Scores.persist_score(f, top_score + 1, f, data)
+		var style = "-"
+		for i in data["style"]:
+			style += str(i)
+		#print("PRINTYYY: ", style)
+		SilentWolf.Scores.persist_score(username + style, top_score + 1, f, data)
 		#SilentWolf.Scores.wipe_leaderboard(f)
 		data = {}
 
@@ -55,5 +66,5 @@ func scene_changed():
 				top_score = t
 			
 			
-			print("Scores: ", m , " score : ", s[i].score)
+			#print("Scores: ", m , " score : ", s[i].score)
 			Shared.replayers[i].metadata = m
