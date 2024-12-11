@@ -333,6 +333,9 @@ func _physics_process(delta):
 			var m = metadata[srf]
 			joy.x = m[0]
 			btn_jump = bool(m[1])
+		if metadata.has("limit") and metadata["limit"] < replay_frame:
+			joy.x = 0
+			btn_jump = false
 		
 		replay_frame += 1
 	
