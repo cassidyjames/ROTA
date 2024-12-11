@@ -323,6 +323,7 @@ func _physics_process(delta):
 		
 		if joy.x != joy_last.x or btn_jump != btn_jump_last:
 			Scores.data[Shared.map_frame] = [joy.x, int(btn_jump)]
+			Scores.data["limit"] = Shared.map_frame
 	
 	if is_replay and metadata.has_all(["pos", "dir"]):
 		#print(replay_frame)
