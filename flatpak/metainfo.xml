@@ -63,4 +63,11 @@
   <releases>
     <release version="0.0.0" date="2024-12-03" />
   </releases>
+  <supports>
+    <control>touch</control>
+  </supports>
+  <recommends>
+    <control>keyboard</control>
+    <control>gamepad</control>
+  </recommends>
 </component>
