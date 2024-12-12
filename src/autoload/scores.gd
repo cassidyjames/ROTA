@@ -60,7 +60,7 @@ func scene_before():
 func scene_changed():
 	var f = Shared.map_name
 	if "hub" in f and Shared.is_multiplayer:
-		yield(SilentWolf.Scores.get_high_scores(1000, f), "sw_scores_received")
+		yield(SilentWolf.Scores.get_high_scores(Shared.max_players, f), "sw_scores_received")
 		
 		var s = SilentWolf.Scores.scores
 		var z = min(Shared.max_players, s.size())
