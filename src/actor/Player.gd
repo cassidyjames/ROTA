@@ -152,7 +152,7 @@ var snowballs = []
 
 export var is_replay := false
 var metadata = {} setget set_metadata
-var replay_frame = 0
+var replay_frame = -1
 
 var replay_delay = 0.0
 export var delay_range := Vector2(0.3, 5.0)
@@ -165,7 +165,6 @@ func _enter_tree():
 		Shared.player = self
 	get_tree().connect("physics_frame", self, "physics_frame")
 	MenuPause.connect("opened", self, "pause")
-	Shared.connect("scene_before", self, "scene_before")
 	Shared.connect("scene_changed", self, "scene")
 	Wipe.connect("start", self, "wipe_start")
 	Cutscene.connect("playing", self, "cutscene_playing")
@@ -229,11 +228,6 @@ func wipe_start(arg):
 		spr_easy.show = arg
 		if arg: spr_easy.clock = 0.0
 
-func scene_before():
-	replay_keys = 0
-	replay_frame = -1
-	metadata = {}
-	clear_input()
 
 func scene():
 	door_exit = Shared.door_in if is_instance_valid(Shared.door_in) and !is_replay else null
@@ -258,6 +252,7 @@ func scene():
 	velocity = Vector2.ZERO
 	joy_last = Vector2.ZERO
 	joy = Vector2.ZERO
+	replay_frame = -1
 	
 	is_floor = false
 	is_jump = true
@@ -323,19 +318,21 @@ func _physics_process(delta):
 			Scores.data["limit"] = replay_frame
 			replay_keys += 1
 	
-	if is_replay and metadata.has_all(["pos", "dir"]):
-		#print(replay_frame)
-		var srf = str(replay_frame)
-		if metadata.has(srf):
-			#print(replay_frame, " oh yeah")
-			var m = metadata[srf]
-			joy.x = m[0]
-			btn_jump = bool(m[1])
-		if metadata.has("limit") and metadata["limit"] < replay_frame:
-			joy.x = 0
-			btn_jump = false
+	
 	
 	if replay_frame > -1:
+		if is_replay and metadata.has_all(["pos", "dir"]):
+			#print(replay_frame)
+			var srf = str(replay_frame)
+			if metadata.has(srf):
+				#print(replay_frame, " oh yeah")
+				var m = metadata[srf]
+				joy.x = m[0]
+				btn_jump = bool(m[1])
+			if metadata.has("limit") and metadata["limit"] < replay_frame:
+				joy.x = 0
+				btn_jump = false
+		
 		replay_frame += 1
 	
 	
