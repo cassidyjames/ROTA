@@ -3,7 +3,8 @@ Made with [Godot Engine](https://github.com/godotengine/godot) 3.6 / Gravity Ben
 
 Available for Linux, Windows, Mac, Web & Android !
 
-Play now on [Steam](https://store.steampowered.com/app/1993830/ROTA/) or [itch.io](https://hhoneysoftware.itch.io/rota) (:
+Play now on [store.steampowered.com/app/1993830/ROTA/](https://store.steampowered.com/app/1993830/ROTA/)
+Full Game on [hhoneysoftware.itch.io/rota](https://hhoneysoftware.itch.io/rota) (:
 
 ![main_capsule](media/image/assets/main_capsule.png)
 
